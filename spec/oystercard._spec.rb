@@ -42,4 +42,8 @@ describe Oystercard do
     expect { subject.touch_in }.to raise_error "Insufficient funds"
   end
 
+  it 'charges the card on touch_out' do
+    expect { subject.touch_out }.to change { subject.balance }.by( -Oystercard::MINIMUM_CHARGE)
+  end
+
 end
