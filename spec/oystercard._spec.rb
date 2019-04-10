@@ -46,4 +46,9 @@ describe Oystercard do
     expect { subject.touch_out }.to change { subject.balance }.by( -Oystercard::MINIMUM_CHARGE)
   end
 
+  it 'stores the entry station' do
+    subject.touch_in(station)
+    expect(subject.entry_station).to eq station
+  end
+
 end

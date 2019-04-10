@@ -22,11 +22,13 @@ class Oystercard
   def touch_in
     fail "Insufficient funds" if @balance < MINIMUM_CHARGE
     @in_journey = true
+    puts "Card touched in. Remaining balance is #{@balance}"
   end
 
   def touch_out
     deduct(MINIMUM_CHARGE)
     @in_journey = false
+    puts "Card touched out. Remaining balance is #{@balance}"
   end
 
   def in_journey?
