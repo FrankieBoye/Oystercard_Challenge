@@ -1,9 +1,13 @@
 require 'oystercard'
 
 describe Oystercard do
+
+  let(:station) { double :station }
+
   it 'checks the new card has a balance' do
     expect(subject.balance).to eq(0)
   end
+  it { is_expected.to respond_to(:touch_in).with(1).argument }
 
   describe '#top_up' do
     it { is_expected.to respond_to(:top_up).with(1).argument }
@@ -25,13 +29,13 @@ describe Oystercard do
 
   it 'responds to touch_in' do
     subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
-    subject.touch_in
+    subject.touch_in(station)
     expect(subject.in_journey).to eq true
   end
 
   it 'responds to touch_out' do
     subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
-    subject.touch_in
+    subject.touch_in(station)
     subject.touch_out
     expect(subject.in_journey).to eq false
   end
@@ -40,17 +44,20 @@ describe Oystercard do
     expect(subject).not_to be_in_journey
   end
 
-  it 'raises error if insufficient funds on touch in' do
-    expect { subject.touch_in }.to raise_error "Insufficient funds"
-  end
-
   it 'charges the card on touch_out' do
     expect { subject.touch_out }.to change { subject.balance }.by( -Oystercard::MINIMUM_CHARGE)
   end
 
+  describe '#touch_in' do
+  it 'raises error if insufficient funds on touch in' do
+    expect { subject.touch_in(station) }.to raise_error "Insufficient funds"
+  end
+
   it 'stores the entry station' do
+    allow(subject).to receive(:entry_station) {station}
     subject.touch_in(station)
     expect(subject.entry_station).to eq station
+  end
   end
 
 end
