@@ -30,14 +30,14 @@ describe Oystercard do
   it 'responds to touch_in' do
     subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
     subject.touch_in(station)
-    expect(subject.in_journey).to eq true
+    expect(subject.in_journey?).to eq true
   end
 
   it 'responds to touch_out' do
-    subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
+    subject.top_up(1)
     subject.touch_in(station)
     subject.touch_out
-    expect(subject.in_journey).to eq false
+    expect(subject.in_journey?).to eq false
   end
 
   it 'expects to start initially not in journey' do
@@ -54,6 +54,7 @@ describe Oystercard do
   end
 
   it 'stores the entry station' do
+    subject.top_up(1)
     allow(subject).to receive(:entry_station) {station}
     subject.touch_in(station)
     expect(subject.entry_station).to eq station
