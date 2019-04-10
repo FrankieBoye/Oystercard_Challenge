@@ -23,16 +23,18 @@ describe Oystercard do
     expect{ subject.deduct 10 }.to change { subject.balance }.by -10
   end
 
-  # it 'responds to touch_in' do
-  #   subject.touch_in
-  #   expect(subject).to be_in_journey
-  # end
+  it 'responds to touch_in' do
+    subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
+    subject.touch_in
+    expect(subject.in_journey).to eq true
+  end
 
-  # it 'responds to touch_out' do
-  #   subject.touch_in
-  #   subject.touch_out
-  #   expect(subject).to respond_to :touch_out
-  # end
+  it 'responds to touch_out' do
+    subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
+    subject.touch_in
+    subject.touch_out
+    expect(subject.in_journey).to eq false
+  end
 
   it 'expects to start initially not in journey' do
     expect(subject).not_to be_in_journey
