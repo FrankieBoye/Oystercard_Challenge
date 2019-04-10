@@ -7,8 +7,13 @@ describe Oystercard do
   it 'checks the new card has a balance' do
     expect(subject.balance).to eq(0)
   end
-  it { is_expected.to respond_to(:touch_in).with(1).argument }
 
+  it 'shows list of previous trips' do
+    expect(subject.trips).to be_empty
+  end
+
+  it { is_expected.to respond_to(:touch_in).with(1).argument }
+  it { is_expected.to respond_to(:touch_out).with(1).argument }
   describe '#top_up' do
     it { is_expected.to respond_to(:top_up).with(1).argument }
 
@@ -36,7 +41,7 @@ describe Oystercard do
   it 'responds to touch_out' do
     subject.top_up(1)
     subject.touch_in(station)
-    subject.touch_out
+    subject.touch_out(station)
     expect(subject.in_journey?).to eq false
   end
 
@@ -45,7 +50,7 @@ describe Oystercard do
   end
 
   it 'charges the card on touch_out' do
-    expect { subject.touch_out }.to change { subject.balance }.by( -Oystercard::MINIMUM_CHARGE)
+    expect { subject.touch_out(station) }.to change { subject.balance }.by( -Oystercard::MINIMUM_CHARGE)
   end
 
   describe '#touch_in' do
@@ -61,4 +66,9 @@ describe Oystercard do
   end
   end
 
+  it 'stores the exit station' do
+    allow(subject).to receive(:exit_station) {station}
+    subject.touch_out(station)
+    expect(subject.exit_station).to eq station
+  end
 end
