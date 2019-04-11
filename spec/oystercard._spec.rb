@@ -14,6 +14,7 @@ describe Oystercard do
 
   it { is_expected.to respond_to(:touch_in).with(1).argument }
   it { is_expected.to respond_to(:touch_out).with(1).argument }
+
   describe '#top_up' do
     it { is_expected.to respond_to(:top_up).with(1).argument }
 
@@ -33,7 +34,7 @@ describe Oystercard do
   end
 
   it 'responds to touch_in' do
-    subject.instance_variable_set(:@balance, Oystercard::MINIMUM_CHARGE)
+    subject.top_up(Oystercard::MINIMUM_CHARGE)
     subject.touch_in(station)
     expect(subject.in_journey?).to eq true
   end
