@@ -72,4 +72,15 @@ describe Oystercard do
     subject.touch_out(station)
     expect(subject.exit_station).to eq station
   end
+
+  it "stores one journey" do
+    subject.top_up(10)
+    subject.touch_in("Aldgate")
+    subject.touch_out("London Bridge")
+    expect(subject.trips).to eq [{entry: "Aldgate", exit: "London Bridge"}]
+  end
+
+  it "trips has an empty list of journeys by default" do
+    expect(subject.trips).to eq []
+  end
 end
